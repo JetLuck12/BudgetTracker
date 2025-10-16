@@ -100,3 +100,21 @@ class BudgetManager:
 
     def get_expense_for_category(self, category: str) -> float:
         return self.dbmanager.get_expense_for_category(category)
+
+    def get_income_categories(self) -> list[str]:
+        """Возвращает список категорий, которые имеют доходы (пополнения)"""
+        transactions = self.get_transactions()
+        income_categories = set()
+        for transaction in transactions:
+            if transaction.type_ == "Пополнение":
+                income_categories.add(transaction.category)
+        return sorted(income_categories)
+
+    def get_expense_categories(self) -> list[str]:
+        """Возвращает список категорий, которые имеют расходы (списания)"""
+        transactions = self.get_transactions()
+        expense_categories = set()
+        for transaction in transactions:
+            if transaction.type_ == "Списание":
+                expense_categories.add(transaction.category)
+        return sorted(expense_categories)

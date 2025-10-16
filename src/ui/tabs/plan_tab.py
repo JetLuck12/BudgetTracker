@@ -25,14 +25,14 @@ class PlanTab(QWidget):
         tables_layout = QHBoxLayout()
         main_layout.addLayout(tables_layout)
 
-        # Таблица доходов
+        # Таблица пополнений (доходов)
         self.income_table = QTableWidget()
         self.income_table.setColumnCount(4)
         self.income_table.setHorizontalHeaderLabels(["Категория", "План", "Факт", "Разница"])
         self.income_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
 
         self.income_table.itemChanged.connect(self.update_income_diff)
-        # Таблица расходов
+        # Таблица расходов (списаний)
         self.expense_table = QTableWidget()
         self.expense_table.setColumnCount(4)
         self.expense_table.setHorizontalHeaderLabels(["Категория", "План", "Факт", "Разница"])
@@ -54,14 +54,14 @@ class PlanTab(QWidget):
         main_layout.addWidget(self.result_label)
 
     def load_existing_plan(self):
-        categories = self.manager.get_all_categories()
-        if not categories:
+        # Получаем категории по типу транзакций
+        income_cats = self.manager.get_income_categories()
+        expense_cats = self.manager.get_expense_categories()
+
+        if not income_cats and not expense_cats:
             return
 
-        income_cats = self.manager.get_summary_by_category(tran_type_=tran_type.Income)
-        expense_cats = self.manager.get_summary_by_category(tran_type_=tran_type.Outcome)
-
-        # --- доходы ---
+        # --- доходы (пополнения) ---
         self.income_table.setRowCount(len(income_cats))
         for row, cat in enumerate(income_cats):
             actual_income = self.manager.get_income_for_category(cat)
@@ -79,7 +79,7 @@ class PlanTab(QWidget):
                 if item:
                     item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
 
-        # --- расходы ---
+        # --- расходы (списания) ---
         self.expense_table.setRowCount(len(expense_cats))
         for row, cat in enumerate(expense_cats):
             actual_expense = self.manager.get_expense_for_category(cat)
