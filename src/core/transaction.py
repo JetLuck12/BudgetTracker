@@ -4,6 +4,7 @@ def from_list(raw_trans):
     trans = list()
     for row in raw_trans:
         trans.append(Transaction(amount=row[1], category=row[2], note=row[3], date=row[0], report_id=row[4], type_=row[5]))
+    return trans
 
 
 class Transaction:

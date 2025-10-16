@@ -28,7 +28,7 @@ class DBManager:
     def get_categories(self) -> list[str]:
         """Возвращает список уникальных категорий из базы"""
         cursor = self.conn.cursor()
-        self.conn.execute("SELECT DISTINCT category FROM transactions")
+        cursor.execute("SELECT DISTINCT category FROM transactions")
         rows = cursor.fetchall()
         return [r[0] for r in rows if r[0]]
 
@@ -39,6 +39,17 @@ class DBManager:
                     SELECT SUM(amount)
                     FROM transactions
                     WHERE category = ? AND type = 'Пополнение'
+                """, (category,))
+        result = cursor.fetchone()
+        return float(result[0]) if result and result[0] else 0.0
+
+    def get_expense_for_category(self, category: str) -> float:
+        """Возвращает сумму расходов ('Списание') по указанной категории"""
+        cursor = self.conn.cursor()
+        cursor.execute("""
+                    SELECT SUM(amount)
+                    FROM transactions
+                    WHERE category = ? AND type = 'Списание'
                 """, (category,))
         result = cursor.fetchone()
         return float(result[0]) if result and result[0] else 0.0

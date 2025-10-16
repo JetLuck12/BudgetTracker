@@ -114,11 +114,11 @@ class StatisticsTab(QWidget):
         self.update_top_categories_chart()
 
     def update_top_categories_chart(self):
-        categories, percentages = self.manager.get_top_expense_categories()
-        if not categories:
+        summary = self.manager.get_top_expense_categories()
+        if type(summary) != dict:
             return
 
         self.top_fig.clear()
         ax = self.top_fig.add_subplot(111)
-        ax.pie(percentages, labels=categories, autopct='%1.1f%%', startangle=90)
-        ax.set_title("🏷️ Топ-5 категорий расходов")
+        ax.pie(summary.values(), labels=summary.keys(), autopct='%1.1f%%', startangle=90)
+        ax.set_title("Топ-5 категорий расходов")

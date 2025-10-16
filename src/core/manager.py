@@ -97,3 +97,6 @@ class BudgetManager:
 
     def get_income_for_category(self, category: str) -> float:
         return self.dbmanager.get_income_for_category(category)
+
+    def get_expense_for_category(self, category: str) -> float:
+        return self.dbmanager.get_expense_for_category(category)

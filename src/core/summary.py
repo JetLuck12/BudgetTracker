@@ -1,3 +1,5 @@
+from collections import defaultdict
+from email.policy import default
 from enum import Enum
 
 import pandas as pd
@@ -12,7 +14,7 @@ class tran_type(Enum):
 class Summary:
     @staticmethod
     def get_summary_by_category(transactions, tran_type_ = tran_type.All) -> dict[str, float]:
-        summary = dict()
+        summary = defaultdict(float)
         for transaction in transactions:
             amount = 0
             if tran_type_ == tran_type.Income:
@@ -27,6 +29,8 @@ class Summary:
     @staticmethod
     def get_financial_summary(transactions) -> dict[str, float]:
         summary = dict()
+        summary["expense"] = 0
+        summary["income"] = 0
         if type(transactions) != list:
             return summary
         for transaction in transactions:
@@ -68,7 +72,7 @@ class Summary:
         return summary
 
     @staticmethod
-    def get_summary_by_weekday(transactions) -> dict[str, float]:
+    def get_summary_by_weekday(transactions):
         # Преобразуем в DataFrame для удобства анализа
         df = pd.DataFrame([{
             "date": t.date,
@@ -94,8 +98,11 @@ class Summary:
         # Группировка по дням недели
         avg_expenses = df.groupby("weekday")["amount"].mean().reindex(weekdays)
 
+        weekdays_list = avg_expenses.index.tolist()
+        expenses_list = avg_expenses.values.tolist()
+
         # Возвращаем как списки для построения графика
-        return avg_expenses
+        return weekdays_list, expenses_list
 
     @staticmethod
     def get_top_expenses(transactions, top_n=5) -> dict[str, float]:
@@ -111,11 +118,14 @@ class Summary:
         if df.empty:
             return {}
 
-        category_sums = df.groupby("category")["amount"].sum().sort_values(ascending=False)
+        category_sums = (
+            df.groupby("category")["amount"]
+            .sum()
+            .sort_values(ascending=False)
+        )
 
         total = category_sums.sum()
         percentages = (category_sums / total * 100).round(1)
 
         top_categories = percentages.head(top_n)
-
         return top_categories.to_dict()

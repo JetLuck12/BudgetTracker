@@ -64,7 +64,7 @@ class PlanTab(QWidget):
         # --- доходы ---
         self.income_table.setRowCount(len(income_cats))
         for row, cat in enumerate(income_cats):
-            actual_income = self.manager.get_actual_income_for_category(cat)
+            actual_income = self.manager.get_income_for_category(cat)
             planned_income = 0  # или можно брать сохранённый план
             diff = actual_income - planned_income
 
@@ -82,7 +82,7 @@ class PlanTab(QWidget):
         # --- расходы ---
         self.expense_table.setRowCount(len(expense_cats))
         for row, cat in enumerate(expense_cats):
-            actual_expense = self.manager.get_actual_expense_for_category(cat)
+            actual_expense = self.manager.get_expense_for_category(cat)
             planned_expense = 0
             diff = planned_expense - actual_expense  # экономия положительная
 
