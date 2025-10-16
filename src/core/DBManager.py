@@ -63,15 +63,22 @@ class DBManager:
             (tran.report_id, tran.amount, tran.category, tran.note, tran.date or datetime.now().strftime("%Y-%m-%d %H:%M:%S"), tran.type_)
         )
         self.conn.commit()
+        return cursor.lastrowid  # Возвращаем ID созданной транзакции
 
     def delete_report(self, report_id: int):
         cursor = self.conn.cursor()
         cursor.execute("DELETE FROM transactions WHERE report_id = ?", (report_id,))
         self.conn.commit()
 
+    def delete_transaction(self, transaction_id: int):
+        """Удаляет отдельную транзакцию по её ID"""
+        cursor = self.conn.cursor()
+        cursor.execute("DELETE FROM transactions WHERE id = ?", (transaction_id,))
+        self.conn.commit()
+
     def get_transactions(self) -> list[Transaction]:
         cursor = self.conn.cursor()
-        cursor.execute("SELECT date, amount, category, note, report_id, type FROM transactions ORDER BY date DESC")
+        cursor.execute("SELECT id, date, amount, category, note, report_id, type FROM transactions ORDER BY date DESC")
         raw_trans = cursor.fetchall()
         return from_list(raw_trans)
 
