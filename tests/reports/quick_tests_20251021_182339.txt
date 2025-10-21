@@ -1,0 +1,73 @@
+Быстрые тесты - 2025-10-21 18:23:39.698039
+==================================================
+
+============================= test session starts =============================
+platform win32 -- Python 3.13.5, pytest-8.4.2, pluggy-1.6.0 -- C:\Users\Nikolay\AppData\Local\Programs\Python\Python313\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Nikolay\PycharmProjects\budget_tracker
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 15 items
+
+tests/test_core_simple.py::TestTransaction::test_transaction_creation PASSED [  6%]
+tests/test_core_simple.py::TestTransaction::test_transaction_str_representation PASSED [ 13%]
+tests/test_core_simple.py::TestTransaction::test_from_list_function PASSED [ 20%]
+tests/test_core_simple.py::TestDBManager::test_db_manager_initialization PASSED [ 26%]
+tests/test_core_simple.py::TestDBManager::test_add_and_get_transaction PASSED [ 33%]
+tests/test_core_simple.py::TestDBManager::test_get_categories PASSED     [ 40%]
+tests/test_core_simple.py::TestSummary::test_get_financial_summary FAILED [ 46%]
+tests/test_core_simple.py::TestSummary::test_get_summary_by_category_all FAILED [ 53%]
+tests/test_core_simple.py::TestSummary::test_get_summary_by_category_income_only FAILED [ 60%]
+tests/test_core_simple.py::TestSummary::test_get_summary_by_category_expense_only FAILED [ 66%]
+tests/test_core_simple.py::TestSummary::test_get_summary_with_empty_list PASSED [ 73%]
+tests/test_core_simple.py::TestSummary::test_get_summary_with_none PASSED [ 80%]
+tests/test_core_simple.py::TestBudgetManager::test_budget_manager_initialization PASSED [ 86%]
+tests/test_core_simple.py::TestBudgetManager::test_add_transaction PASSED [ 93%]
+tests/test_core_simple.py::TestBudgetManager::test_get_financial_summary FAILED [100%]
+
+================================== FAILURES ===================================
+___________________ TestSummary.test_get_financial_summary ____________________
+tests\test_core_simple.py:194: in test_get_financial_summary
+    assert summary["income"] == 2000.0
+E   assert 4000.0 == 2000.0
+---------------------------- Captured stdout setup ----------------------------
+
+Запуск теста: test_get_financial_summary
+________________ TestSummary.test_get_summary_by_category_all _________________
+tests\test_core_simple.py:204: in test_get_summary_by_category_all
+    assert summary["Зарплата"] == 2000.0
+E   assert -2000.0 == 2000.0
+---------------------------- Captured stdout setup ----------------------------
+
+Запуск теста: test_get_summary_by_category_all
+____________ TestSummary.test_get_summary_by_category_income_only _____________
+tests\test_core_simple.py:214: in test_get_summary_by_category_income_only
+    assert summary["Продукты"] == 0.0
+E   assert 1300.0 == 0.0
+---------------------------- Captured stdout setup ----------------------------
+
+Запуск теста: test_get_summary_by_category_income_only
+____________ TestSummary.test_get_summary_by_category_expense_only ____________
+tests\test_core_simple.py:222: in test_get_summary_by_category_expense_only
+    assert summary["Зарплата"] == 0.0
+E   assert -2000.0 == 0.0
+---------------------------- Captured stdout setup ----------------------------
+
+Запуск теста: test_get_summary_by_category_expense_only
+________________ TestBudgetManager.test_get_financial_summary _________________
+tests\test_core_simple.py:352: in test_get_financial_summary
+    assert summary["expense"] >= 1500.0  # Может быть больше из-за report_id=-1
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   assert 0 >= 1500.0
+---------------------------- Captured stdout setup ----------------------------
+
+Запуск теста: test_get_financial_summary
+=========================== short test summary info ===========================
+FAILED tests/test_core_simple.py::TestSummary::test_get_financial_summary - a...
+FAILED tests/test_core_simple.py::TestSummary::test_get_summary_by_category_all
+FAILED tests/test_core_simple.py::TestSummary::test_get_summary_by_category_income_only
+FAILED tests/test_core_simple.py::TestSummary::test_get_summary_by_category_expense_only
+FAILED tests/test_core_simple.py::TestBudgetManager::test_get_financial_summary
+======================== 5 failed, 10 passed in 0.33s =========================
+
+==================================================

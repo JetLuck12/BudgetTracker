@@ -228,19 +228,19 @@ class TransactionsTab(QWidget):
         return widget
 
     def delete_transaction(self, transaction_id):
-        """Удаляет транзакцию по её ID"""
+        """Удаляет транзакцию по её ID с поддержкой отмены"""
         reply = QMessageBox.question(
             self, 
             "Подтверждение удаления", 
-            "Вы уверены, что хотите удалить эту транзакцию?",
+            "Вы уверены, что хотите удалить эту транзакцию?\n\n💡 Вы сможете отменить это действие с помощью Ctrl+Z",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
         
         if reply == QMessageBox.StandardButton.Yes:
             try:
-                self.manager.dbmanager.delete_transaction(transaction_id)
-                CustomMessageBox("Успешно", "Транзакция удалена!", "success", self).show_message()
+                self.manager.delete_transaction(transaction_id)
+                CustomMessageBox("Успешно", "Транзакция удалена!\n\n💡 Используйте Ctrl+Z для отмены", "success", self).show_message()
                 self.refresh_transactions()
             except Exception as e:
                 CustomMessageBox(ERROR_TITLE, f"Не удалось удалить транзакцию: {str(e)}", "error", self).show_message()

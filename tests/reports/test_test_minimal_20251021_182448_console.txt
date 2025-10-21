@@ -1,0 +1,16 @@
+Команда: python -m pytest tests/test_minimal.py -v --html=tests\reports\test_test_minimal_20251021_182448.html --self-contained-html --cov=src --cov-report=html:tests\reports\test_test_minimal_20251021_182448_coverage.html --cov-report=term-missing --tb=short
+Время запуска: 2025-10-21 18:24:50.020886
+================================================================================
+
+STDOUT:
+
+
+STDERR:
+ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]
+__main__.py: error: unrecognized arguments: --html=tests\reports\test_test_minimal_20251021_182448.html --self-contained-html --cov=src --cov-report=html:tests\reports\test_test_minimal_20251021_182448_coverage.html --cov-report=term-missing
+  inifile: C:\Users\Nikolay\PycharmProjects\budget_tracker\pytest.ini
+  rootdir: C:\Users\Nikolay\PycharmProjects\budget_tracker
+
+
+
+Код возврата: 4

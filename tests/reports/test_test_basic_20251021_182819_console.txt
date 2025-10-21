@@ -1,0 +1,63 @@
+Команда: python -m pytest tests/test_basic.py -v --html=tests\reports\test_test_basic_20251021_182819.html --self-contained-html --cov=src --cov-report=html:tests\reports\test_test_basic_20251021_182819_coverage.html --cov-report=term-missing --tb=short
+Время запуска: 2025-10-21 18:28:21.721486
+================================================================================
+
+STDOUT:
+============================= test session starts =============================
+platform win32 -- Python 3.13.5, pytest-8.4.2, pluggy-1.6.0 -- C:\Users\Nikolay\AppData\Local\Programs\Python\Python313\python.exe
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.5', 'Platform': 'Windows-10-10.0.19045-SP0', 'Packages': {'pytest': '8.4.2', 'pluggy': '1.6.0'}, 'Plugins': {'anyio': '4.11.0', 'cov': '7.0.0', 'html': '4.1.1', 'metadata': '3.1.1'}, 'JAVA_HOME': 'C:\\Program Files\\Eclipse Adoptium\\jdk-25.0.0.36-hotspot\\'}
+rootdir: C:\Users\Nikolay\PycharmProjects\budget_tracker
+configfile: pytest.ini
+plugins: anyio-4.11.0, cov-7.0.0, html-4.1.1, metadata-3.1.1
+collecting ... collected 7 items
+
+tests/test_basic.py::TestTransactionBasic::test_transaction_creation PASSED [ 14%]
+tests/test_basic.py::TestTransactionBasic::test_transaction_str_representation PASSED [ 28%]
+tests/test_basic.py::TestSummaryBasic::test_get_financial_summary_single_transaction PASSED [ 42%]
+tests/test_basic.py::TestSummaryBasic::test_get_financial_summary_two_transactions PASSED [ 57%]
+tests/test_basic.py::TestSummaryBasic::test_get_summary_by_category_simple PASSED [ 71%]
+tests/test_basic.py::TestSummaryBasic::test_get_summary_with_empty_list PASSED [ 85%]
+tests/test_basic.py::TestSummaryBasic::test_get_summary_with_none PASSED [100%]
+
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.13.5-final-0 _______________
+
+Name                               Stmts   Miss  Cover   Missing
+----------------------------------------------------------------
+src\api\__init__.py                    0      0   100%
+src\api\dependencies.py                9      9     0%   4-19
+src\api\main.py                       21     21     0%   4-137
+src\api\models.py                     45     45     0%   4-82
+src\api\routers\__init__.py            1      1     0%   2
+src\api\routers\analytics.py          54     54     0%   4-91
+src\api\routers\import_router.py      44     44     0%   4-91
+src\api\routers\plan.py               56     56     0%   4-106
+src\api\routers\transactions.py       48     48     0%   4-91
+src\core\DBManager.py                 70     51    27%   12-15, 19-25, 39-47, 51-55, 59-67, 71-79, 82-90, 93-95, 99-101, 104-108, 111-115
+src\core\__init__.py                   0      0   100%
+src\core\manager.py                  153    120    22%   12-18, 21-23, 28-42, 46-52, 55, 58-59, 62-63, 66, 72-94, 98-100, 107-108, 114-115, 118, 121-122, 126-127, 131-133, 137-149, 152, 155, 158, 162-167, 171-176, 180-204, 208-231, 235-238
+src\core\parser.py                    12      7    42%   7-14
+src\core\plan.py                      22     12    45%   8-11, 15-16, 21-25, 28
+src\core\summary.py                   81     30    63%   60-85, 90-115, 119-141
+src\core\transaction.py               17      4    76%   4-7
+src\core\utils.py                      0      0   100%
+src\main.py                            8      8     0%   1-16
+src\ui\__init__.py                     0      0   100%
+src\ui\app.py                         59     59     0%   1-98
+src\ui\styles.py                       1      1     0%   1
+src\ui\tabs\__init__.py                0      0   100%
+src\ui\tabs\plan_tab.py              171    171     0%   1-261
+src\ui\tabs\statistics_tab.py         90     90     0%   1-124
+src\ui\tabs\transactions_tab.py      176    176     0%   1-255
+----------------------------------------------------------------
+TOTAL                               1138   1007    12%
+Coverage HTML written to dir tests\reports\test_test_basic_20251021_182819_coverage.html
+- Generated html report: file:///C:/Users/Nikolay/PycharmProjects/budget_tracker/tests/reports/test_test_basic_20251021_182819.html -
+============================== 7 passed in 0.59s ==============================
+
+
+STDERR:
+
+
+Код возврата: 0
