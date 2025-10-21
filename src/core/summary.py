@@ -11,6 +11,10 @@ class tran_type(Enum):
     Outcome = 1
     All = 2
 
+# Константы
+EXPENSE_TYPE = "Списание"
+INCOME_TYPE = "Пополнение"
+
 class Summary:
     @staticmethod
     def get_summary_by_category(transactions, tran_type_ = tran_type.All) -> dict[str, float]:
@@ -22,19 +26,19 @@ class Summary:
             elif tran_type_ == tran_type.Outcome:
                 amount = -transaction.amount
             elif tran_type_ == tran_type.All:
-                amount = transaction.amount if transaction.type_ == "Пополнение" else -transaction.amount
+                amount = transaction.amount if transaction.type_ == INCOME_TYPE else -transaction.amount
             summary[transaction.category] += amount
         return summary
 
     @staticmethod
     def get_financial_summary(transactions) -> dict[str, float]:
-        summary = dict()
+        summary = {}
         summary["expense"] = 0
         summary["income"] = 0
-        if type(transactions) != list:
+        if not isinstance(transactions, list):
             return summary
         for transaction in transactions:
-            if transaction.type_ == "Списание":
+            if transaction.type_ == EXPENSE_TYPE:
                 summary["expense"] += transaction.amount
             else:
                 summary["income"] += transaction.amount
@@ -46,8 +50,8 @@ class Summary:
 
     @staticmethod
     def get_graph_summary(transactions) -> list[list[float]]:
-        summary = list()
-        if type(transactions) != list:
+        summary = []
+        if not isinstance(transactions, list):
             return summary
         df = pd.DataFrame([{
             "date": t.date,
@@ -67,7 +71,9 @@ class Summary:
         )
 
         balance = df.groupby("date")["signed_amount"].sum().cumsum()
-        summary.append(balance.index.tolist())
+        # Преобразуем даты в числовые значения (timestamp)
+        dates_as_numbers = [int(date.timestamp()) for date in balance.index]
+        summary.append(dates_as_numbers)
         summary.append(balance.values.tolist())
         return summary
 
@@ -84,7 +90,7 @@ class Summary:
         } for t in transactions])
 
         # Фильтруем только расходы
-        df = df[df["type"] == "Списание"]
+        df = df[df["type"] == EXPENSE_TYPE]
         if df.empty:
             return {}
 
@@ -98,11 +104,8 @@ class Summary:
         # Группировка по дням недели
         avg_expenses = df.groupby("weekday")["amount"].mean().reindex(weekdays)
 
-        weekdays_list = avg_expenses.index.tolist()
-        expenses_list = avg_expenses.values.tolist()
-
-        # Возвращаем как списки для построения графика
-        return weekdays_list, expenses_list
+        # Возвращаем как словарь
+        return avg_expenses.to_dict()
 
     @staticmethod
     def get_top_expenses(transactions, top_n=5) -> dict[str, float]:
@@ -114,7 +117,7 @@ class Summary:
             "report_id": t.report_id,
             "type": t.type_
         } for t in transactions])
-        df = df[df["type"] == "Списание"]
+        df = df[df["type"] == EXPENSE_TYPE]
         if df.empty:
             return {}
 

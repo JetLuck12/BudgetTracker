@@ -12,6 +12,7 @@ class PlanTab(QWidget):
     def __init__(self, manager):
         super().__init__()
         self.manager = manager
+        self.current_plan_state = {}  # Текущее состояние плана
         self.init_ui()
         self.load_existing_plan()
 
@@ -60,12 +61,15 @@ class PlanTab(QWidget):
 
         if not income_cats and not expense_cats:
             return
+        
+        # Сохраняем текущее состояние плана
+        self.current_plan_state = self.manager.get_current_plan_state()
 
         # --- доходы (пополнения) ---
         self.income_table.setRowCount(len(income_cats))
         for row, cat in enumerate(income_cats):
             actual_income = self.manager.get_income_for_category(cat)
-            planned_income = 0  # или можно брать сохранённый план
+            planned_income = self.current_plan_state.get(cat, 0)
             diff = actual_income - planned_income
 
             self.income_table.setItem(row, 0, QTableWidgetItem(cat))
@@ -83,7 +87,7 @@ class PlanTab(QWidget):
         self.expense_table.setRowCount(len(expense_cats))
         for row, cat in enumerate(expense_cats):
             actual_expense = self.manager.get_expense_for_category(cat)
-            planned_expense = 0
+            planned_expense = self.current_plan_state.get(cat, 0)
             diff = planned_expense - actual_expense  # экономия положительная
 
             self.expense_table.setItem(row, 0, QTableWidgetItem(cat))
@@ -148,6 +152,9 @@ class PlanTab(QWidget):
                     diff_item.setBackground(Qt.GlobalColor.red)
                 else:
                     diff_item.setBackground(Qt.GlobalColor.green)
+                
+                # Сохраняем изменение в стек отмены
+                self.save_plan_change()
             except ValueError:
                 pass  # если не число, игнорируем
 
@@ -179,5 +186,76 @@ class PlanTab(QWidget):
                     diff_item.setBackground(Qt.GlobalColor.red)
                 else:
                     diff_item.setBackground(Qt.GlobalColor.green)
+                
+                # Сохраняем изменение в стек отмены
+                self.save_plan_change()
             except ValueError:
                 pass
+
+    def refresh_plan(self):
+        """Обновляет план после изменений в транзакциях"""
+        self.load_existing_plan()
+        self.recalculate_difference()
+
+    def save_plan_change(self):
+        """Сохраняет изменение плана в стек отмены"""
+        # Получаем новое состояние плана из таблиц
+        new_plan_state = {}
+        
+        # Собираем данные из таблицы доходов
+        for row in range(self.income_table.rowCount()):
+            category_item = self.income_table.item(row, 0)
+            plan_item = self.income_table.item(row, 1)
+            if category_item and plan_item:
+                try:
+                    category = category_item.text()
+                    amount = float(plan_item.text())
+                    new_plan_state[category] = amount
+                except ValueError:
+                    pass
+        
+        # Собираем данные из таблицы расходов
+        for row in range(self.expense_table.rowCount()):
+            category_item = self.expense_table.item(row, 0)
+            plan_item = self.expense_table.item(row, 1)
+            if category_item and plan_item:
+                try:
+                    category = category_item.text()
+                    amount = float(plan_item.text())
+                    new_plan_state[category] = amount
+                except ValueError:
+                    pass
+        
+        # Сохраняем изменение только если состояние действительно изменилось
+        if new_plan_state != self.current_plan_state:
+            # Проверяем, не выполняется ли сейчас отмена/повтор
+            if not self.manager.is_undoing_redoing:
+                self.manager.save_plan_changes(self.current_plan_state, new_plan_state)
+            self.current_plan_state = new_plan_state.copy()
+            
+            # Сохраняем план в файл
+            self.save_plan_to_file(new_plan_state)
+
+    def save_plan_to_file(self, plan_state):
+        """Сохраняет план в файл"""
+        try:
+            # Создаем JSON структуру для плана
+            plan_json = []
+            for category, amount in plan_state.items():
+                plan_json.append({
+                    "category": category,
+                    "plan_expense": amount
+                })
+            
+            # Сохраняем через менеджер
+            if self.manager.plan:
+                self.manager.plan.plan = plan_state.copy()
+            else:
+                # Создаем новый план
+                from src.core.plan import Plan
+                self.manager.plan = Plan(plan_json)
+            
+            self.manager.save_plan(self.manager.plan)
+            print("💾 План сохранён в файл")
+        except Exception as e:
+            print(f"❌ Ошибка сохранения плана: {e}")
