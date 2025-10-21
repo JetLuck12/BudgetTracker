@@ -22,9 +22,11 @@ class Summary:
         for transaction in transactions:
             amount = 0
             if tran_type_ == tran_type.Income:
-                amount = transaction.amount
+                if transaction.type_ == INCOME_TYPE:
+                    amount = transaction.amount
             elif tran_type_ == tran_type.Outcome:
-                amount = -transaction.amount
+                if transaction.type_ == EXPENSE_TYPE:
+                    amount = -transaction.amount
             elif tran_type_ == tran_type.All:
                 amount = transaction.amount if transaction.type_ == INCOME_TYPE else -transaction.amount
             summary[transaction.category] += amount
@@ -35,8 +37,13 @@ class Summary:
         summary = {}
         summary["expense"] = 0
         summary["income"] = 0
+        summary["balance"] = 0
+        summary["count"] = 0
+        summary["avg_check"] = 0.0
+        
         if not isinstance(transactions, list):
             return summary
+            
         for transaction in transactions:
             if transaction.type_ == EXPENSE_TYPE:
                 summary["expense"] += transaction.amount
@@ -45,7 +52,7 @@ class Summary:
 
         summary["balance"] = summary["income"] - summary["expense"]
         summary["count"] = len(transactions)
-        summary["avg_check"] = summary["income"] / summary["count"]
+        summary["avg_check"] = summary["income"] / summary["count"] if summary["count"] > 0 else 0.0
         return summary
 
     @staticmethod

@@ -1,0 +1,115 @@
+Команда: python -m pytest tests/test_minimal.py -v --html=tests\reports\test_test_minimal_20251021_182524.html --self-contained-html --cov=src --cov-report=html:tests\reports\test_test_minimal_20251021_182524_coverage.html --cov-report=term-missing --tb=short
+Время запуска: 2025-10-21 18:25:27.795424
+================================================================================
+
+STDOUT:
+============================= test session starts =============================
+platform win32 -- Python 3.13.5, pytest-8.4.2, pluggy-1.6.0 -- C:\Users\Nikolay\AppData\Local\Programs\Python\Python313\python.exe
+cachedir: .pytest_cache
+metadata: {'Python': '3.13.5', 'Platform': 'Windows-10-10.0.19045-SP0', 'Packages': {'pytest': '8.4.2', 'pluggy': '1.6.0'}, 'Plugins': {'anyio': '4.11.0', 'cov': '7.0.0', 'html': '4.1.1', 'metadata': '3.1.1'}, 'JAVA_HOME': 'C:\\Program Files\\Eclipse Adoptium\\jdk-25.0.0.36-hotspot\\'}
+rootdir: C:\Users\Nikolay\PycharmProjects\budget_tracker
+configfile: pytest.ini
+plugins: anyio-4.11.0, cov-7.0.0, html-4.1.1, metadata-3.1.1
+collecting ... collected 13 items
+
+tests/test_minimal.py::TestTransaction::test_transaction_creation PASSED [  7%]
+tests/test_minimal.py::TestTransaction::test_transaction_str_representation PASSED [ 15%]
+tests/test_minimal.py::TestTransaction::test_from_list_function PASSED   [ 23%]
+tests/test_minimal.py::TestDBManager::test_db_manager_initialization PASSED [ 30%]
+tests/test_minimal.py::TestDBManager::test_add_and_get_transaction PASSED [ 38%]
+tests/test_minimal.py::TestSummary::test_get_financial_summary_basic FAILED [ 46%]
+tests/test_minimal.py::TestSummary::test_get_summary_by_category_all FAILED [ 53%]
+tests/test_minimal.py::TestSummary::test_get_summary_by_category_income_only FAILED [ 61%]
+tests/test_minimal.py::TestSummary::test_get_summary_by_category_expense_only FAILED [ 69%]
+tests/test_minimal.py::TestSummary::test_get_summary_with_empty_list PASSED [ 76%]
+tests/test_minimal.py::TestSummary::test_get_summary_with_none PASSED    [ 84%]
+tests/test_minimal.py::TestBudgetManager::test_budget_manager_initialization PASSED [ 92%]
+tests/test_minimal.py::TestBudgetManager::test_add_transaction PASSED    [100%]
+
+================================== FAILURES ===================================
+________________ TestSummary.test_get_financial_summary_basic _________________
+tests\test_minimal.py:166: in test_get_financial_summary_basic
+    assert summary["income"] == 2000.0
+E   assert 3500.0 == 2000.0
+---------------------------- Captured stdout setup ----------------------------
+
+Запуск теста: test_get_financial_summary_basic
+________________ TestSummary.test_get_summary_by_category_all _________________
+tests\test_minimal.py:182: in test_get_summary_by_category_all
+    assert summary["Зарплата"] == 2000.0
+E   assert -2000.0 == 2000.0
+---------------------------- Captured stdout setup ----------------------------
+
+Запуск теста: test_get_summary_by_category_all
+____________ TestSummary.test_get_summary_by_category_income_only _____________
+tests\test_minimal.py:197: in test_get_summary_by_category_income_only
+    assert summary["Продукты"] == 0.0
+E   assert 1000.0 == 0.0
+---------------------------- Captured stdout setup ----------------------------
+
+Запуск теста: test_get_summary_by_category_income_only
+____________ TestSummary.test_get_summary_by_category_expense_only ____________
+tests\test_minimal.py:210: in test_get_summary_by_category_expense_only
+    assert summary["Зарплата"] == 0.0
+E   assert -2000.0 == 0.0
+---------------------------- Captured stdout setup ----------------------------
+
+Запуск теста: test_get_summary_by_category_expense_only
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.13.5-final-0 _______________
+
+Name                               Stmts   Miss  Cover   Missing
+----------------------------------------------------------------
+src\api\__init__.py                    0      0   100%
+src\api\dependencies.py                9      9     0%   4-19
+src\api\main.py                       21     21     0%   4-137
+src\api\models.py                     45     45     0%   4-82
+src\api\routers\__init__.py            1      1     0%   2
+src\api\routers\analytics.py          54     54     0%   4-91
+src\api\routers\import_router.py      44     44     0%   4-91
+src\api\routers\plan.py               56     56     0%   4-106
+src\api\routers\transactions.py       48     48     0%   4-91
+src\core\DBManager.py                 70     24    66%   43-45, 51-55, 59-67, 71-79, 93-95, 99-101
+src\core\__init__.py                   0      0   100%
+src\core\manager.py                  153    107    30%   28-42, 46-52, 58-59, 62-63, 66, 72-94, 98-100, 107-108, 114-115, 118, 121-122, 126-127, 131-133, 137-149, 152, 155, 158, 162-167, 171-176, 180-204, 208-231
+src\core\parser.py                    12      7    42%   7-14
+src\core\plan.py                      22     12    45%   8-11, 15-16, 21-25, 28
+src\core\summary.py                   79     31    61%   47, 58-83, 88-113, 117-139
+src\core\transaction.py               17      0   100%
+src\core\utils.py                      0      0   100%
+src\main.py                            8      8     0%   1-16
+src\ui\__init__.py                     0      0   100%
+src\ui\app.py                         59     59     0%   1-98
+src\ui\styles.py                       1      1     0%   1
+src\ui\tabs\__init__.py                0      0   100%
+src\ui\tabs\plan_tab.py              171    171     0%   1-261
+src\ui\tabs\statistics_tab.py         90     90     0%   1-124
+src\ui\tabs\transactions_tab.py      176    176     0%   1-255
+----------------------------------------------------------------
+TOTAL                               1136    964    15%
+Coverage HTML written to dir tests\reports\test_test_minimal_20251021_182524_coverage.html
+- Generated html report: file:///C:/Users/Nikolay/PycharmProjects/budget_tracker/tests/reports/test_test_minimal_20251021_182524.html -
+=========================== short test summary info ===========================
+FAILED tests/test_minimal.py::TestSummary::test_get_financial_summary_basic
+FAILED tests/test_minimal.py::TestSummary::test_get_summary_by_category_all
+FAILED tests/test_minimal.py::TestSummary::test_get_summary_by_category_income_only
+FAILED tests/test_minimal.py::TestSummary::test_get_summary_by_category_expense_only
+========================= 4 failed, 9 passed in 1.11s =========================
+
+
+STDERR:
+C:\Users\Nikolay\AppData\Local\Programs\Python\Python313\Lib\ast.py:50: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x0000014B87E3B5B0>
+  return compile(source, filename, mode, flags,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\Nikolay\AppData\Local\Programs\Python\Python313\Lib\ast.py:50: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x0000014B87E3BA60>
+  return compile(source, filename, mode, flags,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\Nikolay\AppData\Local\Programs\Python\Python313\Lib\ast.py:50: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x0000014B87E3B2E0>
+  return compile(source, filename, mode, flags,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\Nikolay\AppData\Local\Programs\Python\Python313\Lib\ast.py:50: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x0000014B87E3B6A0>
+  return compile(source, filename, mode, flags,
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+
+
+Код возврата: 1
